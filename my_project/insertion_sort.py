@@ -38,3 +38,6 @@ if my_sorted_list == [x for x in range(1, my_len + 1)]:
     print("yay")
 else:
     print("not yay")
+
+
+# visualization of some sample outputs: https://docs.google.com/spreadsheets/d/1M17I7xZfv8ar-IW5LDPEzZW_9DRInr8dbi19-WghmwE/edit?gid=1595823321#gid=1595823321
