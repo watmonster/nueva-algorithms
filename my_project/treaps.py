@@ -34,6 +34,19 @@ def simple_insert(root_node, value):
         return new_child
 
 
+def simple_search(root_node, value):
+    if value == root_node.value:
+        return root_node
+    elif value < root_node.value and root_node.left_child:
+        return simple_search(root_node.left_child, value)
+    elif value > root_node.value and root_node.right_child:
+        return simple_search(root_node.right_child, value)
+
+
+def simple_delete(root_node, value):
+    pass
+
+
 my_values_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 random.shuffle(my_values_list)
 print(my_values_list)
@@ -43,3 +56,5 @@ for i in range(1, 10):
     newest_child = simple_insert(my_root_node, my_values_list[i])
     # print(newest_child)
     print(newest_child.get_info())  # type: ignore
+
+print(simple_search(my_root_node, random.choice(my_values_list)))
