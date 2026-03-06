@@ -48,8 +48,26 @@ def simple_delete(root_node, value):
     if not delete_node.right_child and not delete_node.left_child and delete_node.parent:  # type: ignore
         delete_node = None
         return root_node
+    elif delete_node.left_child and not delete_node.right_child and delete_node.parent:  # type: ignore
+        temp_node = delete_node.left_child  # type: ignore
+        delete_node.left_child.parent = delete_node.parent  # type: ignore
+        if delete_node.parent.left_child == delete_node:  # type: ignore
+            delete_node.parent.left_child = temp_node  # type: ignore
+        elif delete_node.parent.right_child == delete_node:  # type: ignore
+            delete_node.parent.right_child = temp_node  # type: ignore
+        delete_node = None
+        return root_node
     elif delete_node.right_child and not delete_node.left_child and delete_node.parent:  # type: ignore
+        temp_node = delete_node.right_child  # type: ignore
         delete_node.right_child.parent = delete_node.parent  # type: ignore
+        if delete_node.parent.left_child == delete_node:  # type: ignore
+            delete_node.parent.left_child = temp_node  # type: ignore
+        elif delete_node.parent.right_child == delete_node:  # type: ignore
+            delete_node.parent.right_child = temp_node  # type: ignore
+        delete_node = None
+        return root_node
+    elif delete_node.left_child and delete_node.right_child:  #type: ignore
+        pass
 
 
 my_values_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
