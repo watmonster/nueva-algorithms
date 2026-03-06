@@ -14,21 +14,15 @@ class Node:
 
 
 def simple_insert(root_node, value):
-    # print("root node: " + root_node.get_info())
-    # print("value: ", value)
     if value < root_node.value and root_node.left_child:
-        # print("traversing down left")
         return simple_insert(root_node.left_child, value)
     elif value > root_node.value and root_node.right_child:
-        # print("traversing down right")
         return simple_insert(root_node.right_child, value)
     elif value < root_node.value and not root_node.left_child:
-        # print("adding new left child")
         new_child = Node(value, random.random(), root_node, None, None)
         root_node.left_child = new_child
         return new_child
     elif value > root_node.value and not root_node.right_child:
-        # print("adding new right child")
         new_child = Node(value, random.random(), root_node, None, None)
         root_node.right_child = new_child
         return new_child
@@ -58,8 +52,6 @@ def find_smallest_right(sub_root_node):
 
 
 def simple_delete(root_node, value=None, node=None):
-    # print(root_node)
-    # print(value)
     if value and not node:
         delete_node = simple_search(root_node, value)
     if node and not value:
@@ -170,15 +162,9 @@ my_root_node = Node(my_values_list[0], random.random(), None, None, None)
 print(my_root_node.get_info())
 for i in range(1, len(my_values_list)):
     newest_child = simple_insert(my_root_node, my_values_list[i])
-    # print(newest_child)
-    # print(newest_child.get_info())  # type: ignore
-
-# print(simple_search(my_root_node, random.choice(my_values_list)).get_info())  # type: ignore
 display_tree(my_root_node)
 display_tree_info(my_root_node)
 if my_root_node.left_child:
     right_rotation(my_root_node.left_child)
     display_tree(my_root_node.parent)
     display_tree_info(my_root_node.parent)
-# simple_delete(my_root_node, value=random.choice(my_values_list))
-# display_tree(my_root_node)
