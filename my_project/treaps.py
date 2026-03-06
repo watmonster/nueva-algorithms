@@ -84,6 +84,47 @@ def simple_delete(root_node, value):
         return root_node
 
 
+def get_tree(root_node):
+    tree = [[root_node]]
+    done = False
+    while not done:
+        prev_layer = tree[-1]
+        new_layer = []
+        num_real_nodes = 0
+        for node in prev_layer:
+            if node:
+                if node.left_child:
+                    new_layer.append(node.left_child)
+                    num_real_nodes += 1
+                if not node.left_child:
+                    new_layer.append(None)
+                if node.right_child:
+                    new_layer.append(node.right_child)
+                    num_real_nodes += 1
+                if not node.right_child:
+                    new_layer.append(None)
+            if not node:
+                new_layer.append(None)
+                new_layer.append(None)
+        if num_real_nodes != 0:
+            tree.append(new_layer)
+        elif num_real_nodes == 0:
+            done = True
+    return tree
+
+
+def display_tree(root_node):
+    tree = get_tree(root_node)
+    for layer in tree:
+        layer_str = ""
+        for node in layer:
+            if node:
+                layer_str += str(node.value)
+                layer_str += " "
+            if not node:
+                layer_str += "_ "
+        print(layer_str)
+
 
 my_values_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 random.shuffle(my_values_list)
@@ -95,6 +136,5 @@ for i in range(1, 10):
     # print(newest_child)
     print(newest_child.get_info())  # type: ignore
 
-print(simple_search(my_root_node, random.choice(my_values_list)).get_info())  # type: ignore
-
-simple_delete(my_root_node, 5)
+# print(simple_search(my_root_node, random.choice(my_values_list)).get_info())  # type: ignore
+display_tree(my_root_node)
