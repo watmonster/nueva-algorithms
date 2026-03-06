@@ -17,18 +17,18 @@ def simple_insert(root_node, value):
     # print("root node: " + root_node.get_info())
     # print("value: ", value)
     if value < root_node.value and root_node.left_child:
-        print("traversing down left")
+        # print("traversing down left")
         return simple_insert(root_node.left_child, value)
     elif value > root_node.value and root_node.right_child:
-        print("traversing down right")
+        # print("traversing down right")
         return simple_insert(root_node.right_child, value)
     elif value < root_node.value and not root_node.left_child:
-        print("adding new left child")
+        # print("adding new left child")
         new_child = Node(value, random.random(), root_node, None, None)
         root_node.left_child = new_child
         return new_child
     elif value > root_node.value and not root_node.right_child:
-        print("adding new right child")
+        # print("adding new right child")
         new_child = Node(value, random.random(), root_node, None, None)
         root_node.right_child = new_child
         return new_child
@@ -41,6 +41,15 @@ def simple_search(root_node, value):
         return simple_search(root_node.left_child, value)
     elif value > root_node.value and root_node.right_child:
         return simple_search(root_node.right_child, value)
+
+
+def find_smallest_right(sub_root_node):
+    curr_smallest_right = sub_root_node.right_child
+    while True:
+        if curr_smallest_right.left_child:
+            curr_smallest_right = curr_smallest_right.left_child
+        elif not curr_smallest_right.left_child:
+            return curr_smallest_right
 
 
 def simple_delete(root_node, value):
@@ -66,8 +75,14 @@ def simple_delete(root_node, value):
             delete_node.parent.right_child = temp_node  # type: ignore
         delete_node = None
         return root_node
-    elif delete_node.left_child and delete_node.right_child:  #type: ignore
-        pass
+    elif delete_node.left_child and delete_node.right_child:  # type: ignore
+        # temp_delete_node = delete_node
+        switch_node = find_smallest_right(delete_node)
+        delete_node.value = switch_node.value  # type: ignore
+        delete_node.priority = switch_node.priority  # type: ignore
+        switch_node = None
+        return root_node
+
 
 
 my_values_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -80,4 +95,6 @@ for i in range(1, 10):
     # print(newest_child)
     print(newest_child.get_info())  # type: ignore
 
-print(simple_search(my_root_node, random.choice(my_values_list)))
+print(simple_search(my_root_node, random.choice(my_values_list)).get_info())  # type: ignore
+
+simple_delete(my_root_node, 5)
