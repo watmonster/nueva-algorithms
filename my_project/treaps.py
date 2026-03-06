@@ -94,21 +94,23 @@ def simple_delete(root_node, value=None, node=None):
     elif delete_node.left_child and delete_node.right_child:  # type: ignore
         print("case 4")
         switch_node = find_smallest_right(delete_node)
-        # print(delete_node.get_info())
-        # print(switch_node.get_info())
         delete_node.value, switch_node.value = switch_node.value, delete_node.value  # type: ignore
         delete_node.priority, switch_node.priority = switch_node.priority, delete_node.priority  # type: ignore
-        # print(delete_node.get_info())
-        # print(switch_node.get_info())
-        # display_tree(root_node)
-        # display_tree(delete_node)
-        # display_tree(switch_node)
-        # delete_this_node_ffs = simple_search(root_node, switch_node.value)
-        # print(switch_node)
-        # print(switch_node.value)
-        # print(delete_this_node_ffs)
         display_tree_info(root_node)
         return simple_delete(root_node, node=switch_node)
+
+
+def right_rotation(rotate_up_node):
+    a = rotate_up_node
+    b = a.parent
+    alpha = a.left_child  # noqa
+    beta = a.right_child
+    gamma = b.right_child  # noqa
+    a.parent = b.parent
+    b.parent = a
+    b.left_child = beta
+    a.right_child = b
+    return a
 
 
 def get_tree(root_node):
@@ -161,8 +163,7 @@ def display_tree(root_node):
         print(layer_str)
 
 
-my_values_list = list(range(1, 21))
-print(my_values_list)
+my_values_list = list(range(1, 11))
 random.shuffle(my_values_list)
 print(my_values_list)
 my_root_node = Node(my_values_list[0], random.random(), None, None, None)
@@ -170,9 +171,14 @@ print(my_root_node.get_info())
 for i in range(1, len(my_values_list)):
     newest_child = simple_insert(my_root_node, my_values_list[i])
     # print(newest_child)
-    print(newest_child.get_info())  # type: ignore
+    # print(newest_child.get_info())  # type: ignore
 
 # print(simple_search(my_root_node, random.choice(my_values_list)).get_info())  # type: ignore
 display_tree(my_root_node)
-simple_delete(my_root_node, value=random.choice(my_values_list))
-display_tree(my_root_node)
+display_tree_info(my_root_node)
+if my_root_node.left_child:
+    right_rotation(my_root_node.left_child)
+    display_tree(my_root_node.parent)
+    display_tree_info(my_root_node.parent)
+# simple_delete(my_root_node, value=random.choice(my_values_list))
+# display_tree(my_root_node)
