@@ -44,7 +44,12 @@ def simple_search(root_node, value):
 
 
 def simple_delete(root_node, value):
-    pass
+    delete_node = simple_search(root_node, value)
+    if not delete_node.right_child and not delete_node.left_child and delete_node.parent:  # type: ignore
+        delete_node = None
+        return root_node
+    elif delete_node.right_child and not delete_node.left_child and delete_node.parent:  # type: ignore
+        delete_node.right_child.parent = delete_node.parent  # type: ignore
 
 
 my_values_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
