@@ -101,15 +101,29 @@ def right_rotation(rotate_up_node):
     alpha = a.left_child  # noqa
     beta = a.right_child
     gamma = b.right_child  # noqa
+    print(a.get_info())
+    print(b.get_info())
+    print(alpha.get_info())
+    print(beta.get_info())
+    print(gamma.get_info())
+    print(" ")
     a.parent = b.parent
     b.parent = a
     b.left_child = beta
     a.right_child = b
+    if beta:
+        beta.parent = b
     if a.parent:
         if a.parent.left_child == b:
             a.parent.left_child = a
         elif a.parent.right_child == b:
             a.parent.right_child = a
+    print(a.get_info())
+    print(b.get_info())
+    print(alpha.get_info())
+    print(beta.get_info())
+    print(gamma.get_info())
+    print(" ")
     return a
 
 
@@ -123,6 +137,8 @@ def left_rotation(rotate_up_node):
     a.parent = b
     a.right_child = beta
     b.left_child = a
+    if beta:
+        beta.parent = a
     if b.parent:
         if b.parent.left_child == a:
             b.parent.left_child = b
@@ -225,15 +241,22 @@ def treap_balance(root_node, new_node):
         return get_highest_node(new_node)
 
 
-my_values_list = list(range(1, 11))
-random.shuffle(my_values_list)
+my_values_list = [4, 2, 6, 1, 3, 5, 7]
+# list(range(1, 11))
+# random.shuffle(my_values_list)
 print(my_values_list)
 my_root_node = Node(my_values_list[0], random.random(), None, None, None)
-print(my_root_node.get_info())
+# print(my_root_node.get_info())
 for i in range(1, len(my_values_list)):
     newest_child = treap_insert(get_highest_node(my_root_node), my_values_list[i])
 display_tree(get_highest_node(my_root_node))
 display_tree_info(get_highest_node(my_root_node))
+print(" ")
+# right_rotation(my_root_node.left_child)
+# display_tree(get_highest_node(my_root_node))
+# display_tree_info(get_highest_node(my_root_node))
+
+
 # if my_root_node.left_child:
 #     if my_root_node.left_child.left_child:  # type: ignore
 #         right_rotation(my_root_node.left_child.left_child)  # type: ignore
