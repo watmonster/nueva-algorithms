@@ -30,15 +30,12 @@ def simple_insert(root_node, value):
 
 
 def simple_search(root_node, value):
-    root_node = get_highest_node(root_node)
+    # root_node = get_highest_node(root_node)
     if value == root_node.value:
-        print("found it")
         return root_node
     elif value < root_node.value and root_node.left_child:
-        print("traversing down left")
         return simple_search(root_node.left_child, value)
     elif value > root_node.value and root_node.right_child:
-        print("traversing down right")
         return simple_search(root_node.right_child, value)
 
 
@@ -101,12 +98,6 @@ def right_rotation(rotate_up_node):
     alpha = a.left_child  # noqa
     beta = a.right_child
     gamma = b.right_child  # noqa
-    print(a.get_info())
-    print(b.get_info())
-    print(alpha.get_info())
-    print(beta.get_info())
-    print(gamma.get_info())
-    print(" ")
     a.parent = b.parent
     b.parent = a
     b.left_child = beta
@@ -118,12 +109,6 @@ def right_rotation(rotate_up_node):
             a.parent.left_child = a
         elif a.parent.right_child == b:
             a.parent.right_child = a
-    print(a.get_info())
-    print(b.get_info())
-    print(alpha.get_info())
-    print(beta.get_info())
-    print(gamma.get_info())
-    print(" ")
     return a
 
 
@@ -148,7 +133,7 @@ def left_rotation(rotate_up_node):
 
 
 def get_tree(root_node):
-    root_node = get_highest_node(root_node)
+    # root_node = get_highest_node(root_node)
     tree = [[root_node]]
     done = False
     while not done:
@@ -215,7 +200,7 @@ def get_highest_node(some_node):
 def treap_insert(root_node, value):
     root_node = get_highest_node(root_node)
     new_node = simple_insert(root_node, value)
-    print(display_tree(root_node))
+    # print(display_tree(root_node))
     # print(display_tree_info(root_node))
     return treap_balance(root_node, new_node)
 
@@ -241,29 +226,64 @@ def treap_balance(root_node, new_node):
         return get_highest_node(new_node)
 
 
-my_values_list = [4, 2, 6, 1, 3, 5, 7]
-# list(range(1, 11))
-# random.shuffle(my_values_list)
+def treap_delete(root_node, value=None, delete_node=None):
+    root_node = get_highest_node(root_node)
+    if not delete_node:
+        delete_node = simple_search(root_node, value)
+    if not delete_node.left_child and not delete_node.right_child and delete_node.parent:  # type: ignore
+        if delete_node.parent.left_child == delete_node:  # type: ignore
+            delete_node.parent.left_child = None  # type: ignore
+        elif delete_node.parent.right_child == delete_node:  # type: ignore
+            delete_node.parent.right_child = None  # type: ignore
+        return root_node
+    elif delete_node.left_child and not delete_node.right_child:  # type: ignore
+        right_rotation(delete_node.left_child)  # type: ignore
+        return treap_delete(root_node, delete_node=delete_node)
+    elif not delete_node.left_child and delete_node.right_child:  # type: ignore
+        left_rotation(delete_node.right_child)  # type: ignore
+        return treap_delete(root_node, delete_node=delete_node)
+    elif delete_node.left_child and delete_node.right_child:  # type: ignore
+        if delete_node.left_child.priority > delete_node.right_child.priority:  # type: ignore
+            right_rotation(delete_node.left_child)  # type: ignore
+            return treap_delete(root_node, delete_node=delete_node)
+        elif delete_node.right_child.priority > delete_node.left_child.priority:  # type: ignore
+            left_rotation(delete_node.right_child)  # type: ignore
+            return treap_delete(root_node, delete_node=delete_node)
+
+
+def get_balancing_factor(node):
+    if node.left_child:
+        left_subtree_height = len(get_tree(node.left_child))
+    else:
+        left_subtree_height = 0
+    if node.right_child:
+        right_subtree_height = len(get_tree(node.right_child))
+    else:
+        right_subtree_height = 0
+    return right_subtree_height - left_subtree_height
+
+
+def display_balancing_factors(root_node):
+    tree = get_tree(get_highest_node(root_node))
+    for layer in tree:
+        for node in layer:
+            if node:
+                print("value: ", node.value, ", balancing factor: ", get_balancing_factor(node))
+
+
+my_values_list = list(range(1, 21))
+random.shuffle(my_values_list)
 print(my_values_list)
 my_root_node = Node(my_values_list[0], random.random(), None, None, None)
 # print(my_root_node.get_info())
 for i in range(1, len(my_values_list)):
     newest_child = treap_insert(get_highest_node(my_root_node), my_values_list[i])
 display_tree(get_highest_node(my_root_node))
-display_tree_info(get_highest_node(my_root_node))
-print(" ")
-# right_rotation(my_root_node.left_child)
-# display_tree(get_highest_node(my_root_node))
 # display_tree_info(get_highest_node(my_root_node))
-
-
-# if my_root_node.left_child:
-#     if my_root_node.left_child.left_child:  # type: ignore
-#         right_rotation(my_root_node.left_child.left_child)  # type: ignore
-#         display_tree(get_highest_node(my_root_node))
-#         display_tree_info(get_highest_node(my_root_node))
-# elif my_root_node.right_child:  # type: ignore
-#     if my_root_node.right_child.left_child:
-#         right_rotation(my_root_node.right_child.left_child)  # type: ignore
-#         display_tree(get_highest_node(my_root_node))
-#         display_tree_info(get_highest_node(my_root_node))
+display_balancing_factors(get_highest_node(my_root_node))
+# print(" ")
+# delete_value = random.choice(my_values_list)
+# print(delete_value)
+# new_root = get_highest_node(treap_delete(get_highest_node(my_root_node), value=delete_value))
+# display_tree(new_root)
+# display_tree_info(new_root)
